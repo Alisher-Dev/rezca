@@ -41,11 +41,11 @@ function Search() {
     <Flex position="relative" w="100%" justifyContent="flex-end">
       <Input
         onChange={(e) => handlerSearch(e.target.value)}
-        _focus={{ maxW: "600px" }}
+        _focus={{ maxW: { base: "100%", md: "600px" } }}
         maxW="200px"
         value={input}
         placeholder="search.."
-        transition="all .5s linear"
+        transition="all .3s linear"
         variant="flushed"
       />
       <Box

@@ -1,12 +1,24 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import { Search } from "./Search";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Headers() {
-  const section = [
-    { id: 1, title: "Новинки" },
-    { id: 2, title: "Анонсы" },
-    { id: 3, title: "Подборки" },
-  ];
+  const baseUrl = import.meta.env.VITE_BASE_API;
+  const [category, setCategory] = useState<string[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios<IProduct[]>({
+      url: `${baseUrl}/product`,
+      method: "GET",
+    }).then((res) => {
+      let arr: string[] = [];
+      res.data.map((el) => !arr.includes(el.category) && arr.push(el.category));
+      setCategory(arr);
+    });
+  }, []);
 
   return (
     <>
@@ -17,7 +29,19 @@ function Headers() {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Text>Logo</Text>
+        <Box
+          onClick={() => navigate("/")}
+          bg="rgb(100,100,100)"
+          p="10px"
+          borderRadius="5px"
+        >
+          <Image
+            src="https://pngimg.com/d/letter_r_PNG93944.png"
+            alt="error in img"
+            w="20px"
+            h="20px"
+          />
+        </Box>
         <Text textTransform="uppercase">rezca</Text>
         <Box display="flex" alignItems="center" gap="10px">
           <Text>login</Text>
@@ -32,15 +56,20 @@ function Headers() {
         justifyContent="space-between"
         position="relative"
       >
-        <Box display="flex" w="100%" alignItems="center" gap="10px">
-          {section.map((el) => (
+        <Box
+          display={{ base: "none", md: "flex" }}
+          w="100%"
+          alignItems="center"
+          gap="10px"
+        >
+          {category.map((el, i) => (
             <Text
               fontSize="14px"
               _hover={{ textDecoration: "underline" }}
               cursor="pointer"
-              key={el.id}
+              key={i}
             >
-              {el.title}
+              {el}
             </Text>
           ))}
         </Box>

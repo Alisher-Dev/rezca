@@ -14,7 +14,7 @@ function App() {
   }, [location.pathname]);
 
   return (
-    <Box bg="black" p="200px 0 0">
+    <Box bg="black" pt="30px">
       <Container maxW="1000px" m="0 auto">
         <Box bg="rgb(9,22,28)">
           <Headers />

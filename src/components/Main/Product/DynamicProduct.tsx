@@ -100,13 +100,13 @@ function DynamicProduct() {
         <Text fontSize="24px" fontWeight="600">
           Про что фильм : {data?.title}
         </Text>
-        <Text fontSize="13px">{data?.desc}</Text>
+        <Text fontSize="14px">{data?.desc}</Text>
       </Box>
       <Box mt="20px">
         <Text fontSize="24px" fontWeight="600">
           Смотреть ещё фильмы:
         </Text>
-        <Product limit />
+        <Product limit random />
       </Box>
     </Box>
   );
