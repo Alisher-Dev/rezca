@@ -9,3 +9,7 @@ body {
   font-weight: 300;
   font-style: normal;
 }
+
+.video-react {
+  padding-top: 50% !important;
+}

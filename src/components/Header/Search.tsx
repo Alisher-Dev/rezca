@@ -44,7 +44,7 @@ function Search() {
         _focus={{ maxW: { base: "100%", md: "600px" } }}
         maxW="200px"
         value={input}
-        placeholder="search.."
+        placeholder="поиск..."
         transition="all .3s linear"
         variant="flushed"
       />
