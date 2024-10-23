@@ -8,47 +8,22 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Product } from "./Product";
-import { IProduct, IVideo } from "../../types";
-import { Player } from "video-react";
-import "video-react/dist/video-react.css";
-import {
-  addStorage,
-  getStorage,
-  removeStorage,
-} from "../../helpers/LocalStorage";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { IProduct } from "../../types";
+import { api } from "../../api/axios";
+import { urls } from "../../api/urls";
 
 export function ItemProduct() {
-  const video_series = getStorage("video_series");
-  const [video, setVideo] = useState<IVideo | undefined>();
-  const baseUrl = import.meta.env.VITE_BASE_API;
+  const navigate = useNavigate();
+  const location = useLocation();
   const [data, setData] = useState<IProduct>();
   const { id } = useParams();
 
   useEffect(() => {
-    if (!!video_series) {
-      setVideo(JSON.parse(video_series));
-    }
-  }, [video_series]);
-
-  function handleVideo(value?: IVideo) {
-    if (!!value) {
-      addStorage("video_series", JSON.stringify(value));
-      setVideo(value);
-    } else {
-      removeStorage("video_series");
-      setVideo(undefined);
-    }
-  }
-
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/product/${id}`)
-      .then((res) => setData(res.data))
-      .catch((e) => console.log(e));
+    api(urls.product.getOne(id?.split("_")[1]!)).then((res) =>
+      setData(res.data)
+    );
   }, [id]);
 
   if (!data) {
@@ -95,9 +70,12 @@ export function ItemProduct() {
       color="white"
       gap="20px"
     >
-      <Text fontSize="28px" p="10px 0" fontWeight="700">
-        {data?.title}
-      </Text>
+      <Flex alignItems="center" justifyContent="space-between">
+        <Text fontSize="28px" p="10px 0" fontWeight="700">
+          {data?.title}
+        </Text>
+      </Flex>
+
       <Flex>
         <Image
           src={data?.image}
@@ -133,43 +111,22 @@ export function ItemProduct() {
         gap="3"
         gridTemplateColumns="repeat(auto-fit, minmax(150px, 1fr))"
       >
-        {!video ? (
-          data.video.map((el) => (
-            <Button
-              onClick={() => handleVideo(el)}
-              color="white"
-              _hover={{ bg: "rgb(90,90,90)" }}
-              variant="outline"
-              key={el.id}
-            >
-              {el.title}
-            </Button>
-          ))
-        ) : (
-          <Box>
-            <Flex mb="10px" alignItems="center" justifyContent="space-between">
-              <Button
-                onClick={() => handleVideo()}
-                color="white"
-                variant="outline"
-                _hover={{ bg: "gray" }}
-              >
-                назад
-              </Button>
-              <Text fontWeight="500">{video.title}</Text>
-            </Flex>
-            <Player playsInline>
-              <source src={video.video} />
-            </Player>
-          </Box>
-        )}
+        {data.video?.map((el) => (
+          <Button
+            onClick={() =>
+              navigate(
+                `${location.pathname}/${el.title.split(" ").join("")}_${el.id}`
+              )
+            }
+            color="white"
+            _hover={{ bg: "rgb(90,90,90)" }}
+            variant="outline"
+            key={el.id}
+          >
+            {el.title}
+          </Button>
+        ))}
       </Grid>
-      <Box mt="20px">
-        <Text fontSize="24px" fontWeight="600">
-          Смотреть ещё Anime:
-        </Text>
-        <Product limit />
-      </Box>
     </Box>
   );
 }

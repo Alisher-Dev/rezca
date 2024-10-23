@@ -1,5 +1,5 @@
 import { Box, Text } from "@chakra-ui/react";
-import { Product } from "./Product/Product";
+import { Product } from "./product/product";
 
 function Main() {
   return (

@@ -7,22 +7,19 @@ import {
   Skeleton,
   Text,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IProduct, IProps } from "../../types";
+import { IProduct } from "../../types";
+import { api } from "../../api/axios";
+import { urls } from "../../api/urls";
 
-export function Product(props: IProps) {
-  const baseUrl = import.meta.env.VITE_BASE_API;
+export function Product() {
   const [data, setData] = useState<IProduct[]>();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(`${baseUrl}/product`)
-      .then((res) => setData(res.data))
-      .catch((e) => console.log(e));
+    api(urls.product.get).then((res) => setData(res.data));
   }, []);
 
   if (!data) {
@@ -54,7 +51,7 @@ export function Product(props: IProps) {
       gridTemplateColumns="repeat(auto-fill, minmax(150px, 1fr))"
       gap="20px"
     >
-      {data?.slice(0, props.limit ? 5 : data.length).map((el) => (
+      {data?.map((el) => (
         <GridItem key={el.id}>
           <Image
             src={el.image}
@@ -67,17 +64,18 @@ export function Product(props: IProps) {
             fontSize="14px"
             fontWeight="500"
             variant="link"
-            w="100%"
-            my="10px"
+            my="5px"
             color="rgb(61, 153, 182)"
-            onClick={() => navigate(`/product/${el.id}`)}
+            onClick={() =>
+              navigate(`/product/${el.title.split(" ").join("")}_${el.id}`)
+            }
           >
             {el.title}
           </Button>
           <Text
             fontSize="14px"
             lineHeight="15px"
-            h="60px"
+            h="30px"
             overflow="hidden"
             color="rgb(139, 169, 179)"
           >

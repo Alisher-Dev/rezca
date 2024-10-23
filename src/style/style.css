@@ -13,3 +13,9 @@ body {
 .video-react {
   padding-top: 50% !important;
 }
+.video-react-big-play-button {
+  overflow: hidden;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%);
+}

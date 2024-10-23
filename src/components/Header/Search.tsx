@@ -1,7 +1,8 @@
-import { Box, Flex, Input } from "@chakra-ui/react";
-import axios from "axios";
+import { Box, Flex, Image, Input, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../api/axios";
+import { urls } from "../api/urls";
 
 interface TypeProduct {
   id: number;
@@ -11,18 +12,14 @@ interface TypeProduct {
   image: string;
 }
 
-function Search() {
+export function Search() {
   const navigate = useNavigate();
-  const baseUrl = import.meta.env.VITE_BASE_API;
   const [data, setData] = useState<TypeProduct[]>([]);
   const [search, setSearch] = useState<TypeProduct[]>([]);
   const [input, setInput] = useState("");
 
   useEffect(() => {
-    axios
-      .get(`${baseUrl}/product`)
-      .then((res) => setData(res?.data))
-      .catch((e) => console.log(e));
+    api(urls.product.get).then((res) => setData(res.data));
   }, []);
 
   function handlerSearch(value: string) {
@@ -41,7 +38,7 @@ function Search() {
     <Flex position="relative" w="100%" justifyContent="flex-end">
       <Input
         onChange={(e) => handlerSearch(e.target.value)}
-        _focus={{ maxW: { base: "100%", md: "600px" } }}
+        _focus={{ maxW: { base: "100%", md: "100%" } }}
         maxW="200px"
         value={input}
         placeholder="поиск..."
@@ -60,20 +57,39 @@ function Search() {
         h={search.length && input ? "fit-content" : "0px"}
       >
         {search.map((el) => (
-          <Box
+          <Flex
+            gap="10px"
+            key={el.id}
             as="button"
             borderBottom="1px solid gray"
             p="5px"
             w="100%"
             textAlign="start"
+            transition="all .2s"
+            _hover={{ bg: "rgb(40,40,40)" }}
             onClick={() => [navigate(`/product/${el.id}`), setInput("")]}
           >
-            {el.title}
-          </Box>
+            <Image
+              src={el.image}
+              w="60px"
+              h="60px"
+              objectFit="cover"
+              borderRadius="10%"
+            />
+            <Flex
+              justifyContent="center"
+              flexDirection="column"
+              as="span"
+              h="60px"
+            >
+              <Text>{el.title}</Text>
+              <Text fontSize="13px" h="20px" maxW="500px" overflow="hidden">
+                {el.desc}
+              </Text>
+            </Flex>
+          </Flex>
         ))}
       </Box>
     </Flex>
   );
 }
-
-export { Search };

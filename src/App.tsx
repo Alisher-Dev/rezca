@@ -1,11 +1,12 @@
 import { Box, Container, Image } from "@chakra-ui/react";
-import { Headers } from "./components/Header/Headers";
+import { Headers } from "./components/header/Headers";
 import "./style/style.css";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Main from "./components/Main/Index";
-import { ItemProduct } from "./components/Main/Product/ItemProduct";
+import Main from "./components/main/Index";
+import { ItemProduct } from "./components/main/product/productItem";
 import { useEffect } from "react";
 import Background from "/demon.jpeg";
+import { VideoSeries } from "./components/main/product/video";
 
 function App() {
   const location = useLocation();
@@ -20,6 +21,7 @@ function App() {
         src={Background}
         position="absolute"
         h="100vh"
+        objectFit="cover"
         zIndex="1"
         w="100%"
       />
@@ -43,6 +45,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/product/:id" element={<ItemProduct />} />
+            <Route path="/product/:id/:videoId" element={<VideoSeries />} />
           </Routes>
         </Box>
       </Container>
